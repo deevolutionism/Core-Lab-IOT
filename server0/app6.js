@@ -73,6 +73,7 @@ var io = require('socket.io').listen(server);
 var serialMessage;
 
 io.sockets.on('connection', function(socket){
+
 port.open(function(error) {
 
   if (error) {

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)http://mrdoob.github.io/three.js/examples/webgl_panorama_equirectangular.html -->
+<html lang="en" style="visibility: visible;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>three.js webgl - equirectangular panorama demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<!-- your server info -->
+		<script src="//192.168.1.140:8000/socket.io/socket.io.js" type="text/javascript"></script>
+		<script src="js/jquery.js" type="text/javascript"></script>
+		<script src="js/three.min.js"></script>
+<script>
+var socket;
+var red,blue,green;
+var longitude;
+var url='149.31.195.16';
+var port=8000
+
+
+//var url='http//47.18.216.182';
+$(document).ready(function(){
+	socket = io.connect(url+':'+port);
+	socket.on('toScreen', function (data) {
+		console.log(data);
+		document.getElementById("messageScreen").innerHTML = data;
+		var recieverParagraph = document.createElement("P");
+		var text = document.createTextNode("reciever: " + data);
+		recieverParagraph.appendChild(text);
+		document.getElementById("messageScreen").appendChild(recieverParagraph);
+
+
+
+	//When send message button is clicked emit data to socket
+	function sendToRFduino(){
+		var message = document.getElementById('messageForm').value;
+
+		var senderParagraph = document.createElement("P");
+		var text = document.createTextNode("sender: " + message);
+		senderParagraph.appendChild(text);
+		document.getElementById("messageScreen").appendChild(senderParagraph);
+
+		socket.emit('toRFduino', message);
+	};
+
+});
+});
+
+</script>
+		<style>
+			body {
+				background-color: #880000;
+				
+			}
+			a {
+				color: #ffffff;
+			}
+			#text{
+				position: absolute;
+				z-index: 2;
+				top:130px;
+				right:10px;
+				opacity: 0.5;
+				width:200px;
+				height:30px;
+				font-size: 25px;
+			}
+			#container{
+				width: 100%;
+				height: 300px;
+				background-color: #eee;
+				: 50px;
+			}
+			#bg{
+				position:absolute;
+				z-index: 1;
+				right: 0px;
+				top: 0px;
+				width: 220px;
+				height:220px;
+				color: white;
+				padding-right:10px;
+				font-family: monospace;
+			}
+			#bg p{
+				font-size: 13px;
+				padding-top: 0px;
+				padding-left:20px;
+				text-align: justify;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Basic Messaging Encryption</h1>
+		<div id = "container">
+		<p id = "messageScreen">Messages Here</p>
+		</div>
+		<form>
+			<input type = "text" name = "message" id="messageForm" value = "value">
+			<br>
+		</form>	
+		<button onclick = "sendToRFduino()">click me</button>
+		<script>
+		
+			
+		</script>
+	</body>
+</html>

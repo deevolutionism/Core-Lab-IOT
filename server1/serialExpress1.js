@@ -4,7 +4,7 @@ var app = express();
 var port = 8000;
 var url='localhost'
 var server = app.listen(port);
-var io = require("socket.io/socket.io.js").listen(server);
+var io = require("socket.io").listen(server);
 var serialport = require("serialport");
 var SerialPort = serialport.SerialPort;
 var port = new SerialPort("/dev/ttyAMA0", {
@@ -12,15 +12,11 @@ var port = new SerialPort("/dev/ttyAMA0", {
   parser: serialport.parsers.readline("\n")
 }, false); 
 
-var portdata;
 app.use(express.static(__dirname + '/'));
+console.log('Simple static server listening at '+url+':'+port);
+
 
 io.sockets.on('connection', function (socket) {
-
-socket.on('toSerial', function(data){
-  console.log(data);
-});
-
 port.open(function(error) {
 
   if (error) {
@@ -31,13 +27,22 @@ port.open(function(error) {
     port.on('data', function(data) {
     //console.log('data length: ' + data.length);
     console.log(data);
-    result = data.split(',')
-    result[3]
+    //result = data.split(',')
+    result = data;
 
+    //recieve data from client to send to rfDuino
+    socket.on('toLED', data)\
+    
+  
     // console.log(data);
     // console.log("You sent R=" + data.r + " G="+ data.g + " B="+ data.g);
-    socket.emit('toScreen', { r: result[1], g: result[2], b: result[3] });     
+    socket.emit('toScreen', { r: result, g: 0, b: 255- result });     
+  
 
+
+
+    
+    // port.write("A");
     });
 
 
